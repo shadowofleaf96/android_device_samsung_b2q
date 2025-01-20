@@ -1,7 +1,0 @@
-ro.display.series=Samsung Z Flip 3 
-ro.product.board=lahaina
-ro.board.platform=lahaina
-sys.usb.controller=a600000.dwc3
-ro.boot.dynamic_partitions=true
-#fbe.metadata.wrappedkey=true
-ro.boot.bootdevice=1d84000.ufshc

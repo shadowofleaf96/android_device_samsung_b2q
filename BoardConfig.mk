@@ -1,11 +1,11 @@
 #
-# Copyright (C) 2020 The Android Open Source Project
+# Copyright (C) 2023 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,124 +14,34 @@
 # limitations under the License.
 #
 
-# Bootloader
-BOARD_VENDOR := samsung
-TARGET_SOC := lahaina
-TARGET_BOOTLOADER_BOARD_NAME := lahaina
-TARGET_NO_BOOTLOADER := true
-TARGET_NO_RADIOIMAGE := true
-TARGET_USES_UEFI := true
+DEVICE_PATH := device/samsung/b2q
 
-# Architecture
-TARGET_ARCH := arm64
-TARGET_ARCH_VARIANT := armv8-2a
-TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := generic
-TARGET_CPU_VARIANT_RUNTIME := kryo300
-
-TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv8-2a
-TARGET_2ND_CPU_ABI := armeabi-v7a
-TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := generic
-TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a75
-
-TARGET_USES_64_BIT_BINDER := true
-
-ENABLE_CPUSETS := true
-ENABLE_SCHEDBOOST := true
-
-ALLOW_MISSING_DEPENDENCIES := true
-
-# File systems
-TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
-
-# Platform
-BOARD_USES_QCOM_HARDWARE := true
-TARGET_BOARD_PLATFORM := lahaina
-TARGET_BOARD_PLATFORM_GPU := qcom-adreno660
-QCOM_BOARD_PLATFORMS += lahaina
+include device/samsung/sm8350-common/BoardConfigCommon.mk
 
 # Kernel
-TARGET_PREBUILT_KERNEL := device/samsung/b2q/prebuilt/zImage
-TARGET_PREBUILT_DTB := device/samsung/b2q/prebuilt/dtb
-BOARD_PREBUILT_DTBOIMAGE := device/samsung/b2q/prebuilt/recoverydtbo
-#BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-BOARD_INCLUDE_RECOVERY_DTBO := true
-TARGET_KERNEL_ARCH := arm64
+TARGET_KERNEL_CONFIG        := b2q_defconfig
+BOARD_NAME                  := SRPUC03A010
 
-# Boot
-BOARD_BOOT_HEADER_VERSION := 2
-BOARD_KERNEL_BASE := 0x00000000
-BOARD_KERNEL_CMDLINE := console=null androidboot.hardware=qcom androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000 msm_rtb.filter=0x237 service_locator.enable=1 androidboot.usbcontroller=a600000.dwc3 swiotlb=2048 loop.max_part=7 cgroup.memory=nokmem,nosocket firmware_class.path=/vendor/firmware_mnt/image printk.devkmsg=on androidboot.selinux=permissive
-BOARD_KERNEL_IMAGE_NAME := Image
-BOARD_KERNEL_PAGESIZE := 4096
-BOARD_KERNEL_OFFSET := 0x00008000
-BOARD_RAMDISK_OFFSET := 0x02000000
-BOARD_KERNEL_SECOND_OFFSET := 0x00000000
-BOARD_KERNEL_TAGS_OFFSET := 0x01e00000
-BOARD_DTB_OFFSET := 0x01f00000
-BOARD_MKBOOTIMG_ARGS := --kernel_offset $(BOARD_KERNEL_OFFSET) --ramdisk_offset $(BOARD_RAMDISK_OFFSET) 
-BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) --second_offset $(BOARD_KERNEL_SECOND_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION) --pagesize $(BOARD_KERNEL_PAGESIZE) --board "SRPUC03A002"
-BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB) --dtb_offset $(BOARD_DTB_OFFSET)
-BOARD_CUSTOM_BOOTIMG_MK := device/samsung/b2q/bootimg.mk
+# Kernel modules
+BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules.load))
+BOARD_RECOVERY_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules.load.recovery))
+RECOVERY_KERNEL_MODULES := $(BOARD_RECOVERY_RAMDISK_KERNEL_MODULES_LOAD)
+TARGET_MODULE_ALIASES += wlan.ko:qca_cld3_wlan.ko
 
 # Recovery
-BOARD_HAS_LARGE_FILESYSTEM := true
-BOARD_HAS_NO_SELECT_BUTTON := true
+TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 
-# Partitions
-BOARD_FLASH_BLOCK_SIZE := 262144
-BOARD_BOOTIMAGE_PARTITION_SIZE := 100663296
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 100663296
+# Display
+TARGET_SCREEN_DENSITY := 480
 
-# Dynamic Partitions
-BOARD_SUPER_PARTITION_SIZE := 12067012608
-BOARD_SUPER_PARTITION_GROUPS := samsung_dynamic_partitions
-BOARD_SAMSUNG_DYNAMIC_PARTITIONS_SIZE := 9649745920
-BOARD_SAMSUNG_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product odm
+# OTA assert
+TARGET_OTA_ASSERT_DEVICE := b2q
 
-# System as root
-BOARD_ROOT_EXTRA_FOLDERS := cache carrier data_mirror efs keyrefuge linkerconfig omr optics prism spu
-BOARD_SUPPRESS_SECURE_ERASE := true
+# Fingerprint
+TARGET_SEC_FP_HAS_FINGERPRINT_GESTURES := true
 
-# Workaround for error copying vendor files to recovery ramdisk
-BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
-TARGET_COPY_OUT_VENDOR := vendor
-AB_OTA_UPDATER := false
+# Security patch
+VENDOR_SECURITY_PATCH := 2024-10-20
 
-# Crypto
-PLATFORM_SECURITY_PATCH := 2025-12-31
-VENDOR_SECURITY_PATCH := 2025-12-31
-PLATFORM_VERSION := 12
-TW_INCLUDE_CRYPTO := false
-TW_INCLUDE_CRYPTO_FBE := false
-TW_INCLUDE_FBE_METADATA_DECRYPT := false
-BOARD_USES_METADATA_PARTITION := true
-
-# TWRP specific build flags
-TW_DEVICE_VERSION := ShadowOfLeaf
-TW_THEME := portrait_hdpi
-RECOVERY_SDCARD_ON_DATA := true
-TARGET_RECOVERY_QCOM_RTC_FIX := true
-TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-TW_CUSTOM_CPU_TEMP_PATH := /sys/class/thermal/thermal_zone50/temp
-TW_BRIGHTNESS_PATH := "/sys/class/backlight/panel0-backlight/brightness"
-TW_MAX_BRIGHTNESS := 561
-TW_DEFAULT_BRIGHTNESS := 120
-TW_Y_OFFSET := 100
-TW_H_OFFSET := -100
-TW_NO_REBOOT_BOOTLOADER := true
-TW_HAS_DOWNLOAD_MODE := true
-TW_INCLUDE_NTFS_3G := true
-TW_USE_NEW_MINADBD := true
-TW_INPUT_BLACKLIST := "hbtp_vm"
-TW_EXCLUDE_DEFAULT_USB_INIT := true
-TW_USE_TOOLBOX := true
-TARGET_USES_MKE2FS := true
-TW_NO_LEGACY_PROPS := true
-TW_NO_BIND_SYSTEM := true
-TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
+# Properties
+TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop

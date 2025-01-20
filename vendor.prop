@@ -1,0 +1,19 @@
+# Bluetooth
+bluetooth.device.default_name=Galaxy Z Flip3 5G
+
+# Fingerprint
+ro.vendor.fingerprint.type=
+
+# Keymaster
+ro.hardware.keystore_desede=true
+
+# NFC
+ro.vendor.nfc.feature.chipname=NXP_SN100U
+ro.vendor.nfc.support.advancedsetting=false
+ro.vendor.nfc.support.autoselect=true
+ro.vendor.nfc.support.defaultaid=true
+ro.vendor.nfc.support.nonaid=true
+ro.vendor.nfc.support.othercategory=true
+ro.vendor.nfc.support.uicc=true
+ro.vendor.nfc.info.antpos=16
+ro.vendor.nfc.support.ese=false
